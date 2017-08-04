@@ -4,13 +4,14 @@ defmodule Dred do
   Record.defrecord Search, [id: nil, data: nil]
 
   # initializes the db
-  def init() do
+  def init(nodes \\ db_nodes()) do
+    nodes |> Enum.map(fn n -> Node.connect(n) end) |> IO.inspect(label: "NODES")
     set_db_dir()
-    :mnesia.create_schema(db_nodes()) |> IO.inspect(label: "SCHEMA")
-    :ok = :mnesia.start
+    :mnesia.create_schema(nodes) |> IO.inspect(label: "SCHEMA")
+    :rpc.multicall(nodes, :mnesia, :start, []) |> IO.inspect(label: "START")
     :mnesia.create_table(Search, [
       attributes: [:id, :data],
-      disc_copies:  db_nodes(),
+      disc_copies:  nodes,
       type: :set, # :ordered_set, :bag
     ]) |> IO.inspect(label: "TABLE")
   end
