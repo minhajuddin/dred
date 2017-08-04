@@ -9,6 +9,10 @@ defmodule Dred do
     set_db_dir()
     :mnesia.create_schema(nodes) |> IO.inspect(label: "SCHEMA")
     :rpc.multicall(nodes, :mnesia, :start, []) |> IO.inspect(label: "START")
+  end
+
+  # call this after doing init
+  def create_tables(nodes \\ db_nodes()) do
     :mnesia.create_table(Search, [
       attributes: [:id, :data],
       disc_copies:  nodes,
