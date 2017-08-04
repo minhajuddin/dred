@@ -5,8 +5,7 @@ defmodule Dred do
 
   # initializes the db
   def init(nodes \\ db_nodes()) do
-    nodes |> Enum.map(fn n -> Node.connect(n) end) |> IO.inspect(label: "NODES")
-    set_db_dir()
+    #set_db_dir()
     :mnesia.create_schema(nodes) |> IO.inspect(label: "SCHEMA")
     :rpc.multicall(nodes, :mnesia, :start, []) |> IO.inspect(label: "START")
   end
