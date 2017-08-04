@@ -4,7 +4,7 @@ defmodule Dred do
   Record.defrecord Search, [id: nil, data: nil]
 
   # initializes the db
-  def init do
+  def init() do
     set_db_dir()
     :mnesia.create_schema(db_nodes()) |> IO.inspect(label: "SCHEMA")
     :ok = :mnesia.start
